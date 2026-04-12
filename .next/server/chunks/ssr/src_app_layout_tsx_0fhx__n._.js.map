@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/app/layout.tsx"],"sourcesContent":["import \"./globals.css\"; export default function RootLayout({ children }: any) { return (<html><body>{children}</body></html>) }\n"],"names":["RootLayout","children"],"mappings":"wEAAuC,SAASA,AAAW,UAAEC,CAAQ,CAAO,EAAI,MAAQ,CAAA,EAAA,EAAA,GAAA,EAAC,OAAA,UAAK,CAAA,EAAA,EAAA,GAAA,EAAC,OAAA,UAAMA,KAAyB"}

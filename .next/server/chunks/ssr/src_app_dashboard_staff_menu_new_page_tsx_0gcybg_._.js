@@ -1,0 +1,3 @@
+module.exports=[72038,a=>{"use strict";var b=a.i(87924),c=a.i(72131),d=a.i(50944);a.s(["default",0,function(){let[a,e]=(0,c.useState)(""),f=(0,d.useRouter)();return(0,b.jsxs)("div",{className:"p-8",children:[(0,b.jsx)("h1",{className:"text-2xl font-bold mb-4",children:"Nuevo Menú"}),(0,b.jsx)("input",{value:a,onChange:a=>e(a.target.value),className:"border p-2 mb-4 block w-full"}),(0,b.jsx)("button",{onClick:async()=>{await fetch("/api/staff/menu",{method:"POST",body:JSON.stringify({name:a,startDate:new Date,endDate:new Date})}),f.push("/dashboard/staff/menu")},className:"bg-blue-600 text-white p-2 rounded",children:"Guardar"})]})}])}];
+
+//# sourceMappingURL=src_app_dashboard_staff_menu_new_page_tsx_0gcybg_._.js.map

@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+datasource db {
+  provider = "sqlite"
+}
+enum Role {
+  ADMIN
+  STAFF
+  PROVIDER
+  SCHOOL
+}
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+enum DeliveryStatus {
+  PENDING
+  DELIVERED
+  SIGNED
+  REJECTED
+}
+enum ServiceType {
+  BREAKFAST_SNACK
+  LUNCH
+  MESA_BOX
+}
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  name      String
+  role      Role     @default(STAFF)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  provider  Provider?
+  school    School?
+}
+model Provider {
+  id            String         @id @default(cuid())
+  name          String
+  user          User           @relation(fields: [userId], references: [id])
+  userId        String         @unique
+  schools       School[]
+  deliveryNotes DeliveryNote[]
+}
+model School {
+  id            String               @id @default(cuid())
+  name          String
+  user          User                 @relation(fields: [userId], references: [id])
+  userId        String               @unique
+  provider      Provider?            @relation(fields: [providerId], references: [id])
+  providerId    String?
+  services      SchoolService[]
+  deliveryNotes DeliveryNote[]
+  quotaRequests QuotaChangeRequest[]
+  claims        Claim[]
+}
+model SchoolService {
+  id          String      @id @default(cuid())
+  school      School      @relation(fields: [schoolId], references: [id])
+  schoolId    String
+  serviceType ServiceType
+  quota       Int
+  @@unique([schoolId, serviceType])
+}
+model Menu {
+  id        String   @id @default(cuid())
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  dishes    Dish[]
+}
+model Dish {
+  id          String       @id @default(cuid())
+  name        String
+  dayOfWeek   Int
+  menu        Menu         @relation(fields: [menuId], references: [id])
+  menuId      String
+  ingredients Ingredient[]
+}
+model Ingredient {
+  id       String @id @default(cuid())
+  name     String
+  grammage Float
+  dish     Dish   @relation(fields: [dishId], references: [id])
+  dishId   String
+}
+model DeliveryNote {
+  id         String         @id @default(cuid())
+  provider   Provider       @relation(fields: [providerId], references: [id])
+  providerId String
+  school     School         @relation(fields: [schoolId], references: [id])
+  schoolId   String
+  date       DateTime       @default(now())
+  status     DeliveryStatus @default(PENDING)
+  items      String
+  signature  String?
+  signedAt   DateTime?
+  rejectionReason String?
+}
+model QuotaChangeRequest {
+  id          String        @id @default(cuid())
+  school      School        @relation(fields: [schoolId], references: [id])
+  schoolId    String
+  serviceType ServiceType
+  newQuota    Int
+  status      RequestStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  resolvedAt  DateTime?
+}
+model Claim {
+  id          String        @id @default(cuid())
+  school      School        @relation(fields: [schoolId], references: [id])
+  schoolId    String
+  description String
+  status      RequestStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  resolvedAt  DateTime?
+}

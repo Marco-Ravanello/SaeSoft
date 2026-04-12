@@ -1,0 +1,3 @@
+module.exports=[86655,a=>{"use strict";var b=a.i(87924),c=a.i(72131),d=a.i(50944);a.s(["default",0,function({schoolId:a,providers:e,currentProviderId:f}){let[g,h]=(0,c.useState)(f),i=(0,d.useRouter)(),j=async b=>{h(b),await fetch("/api/admin/assignments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({schoolId:a,providerId:b})}),i.refresh()};return(0,b.jsxs)("select",{value:g,onChange:a=>j(a.target.value),className:"border p-1 rounded",children:[(0,b.jsx)("option",{value:"",children:"-"}),e.map(a=>(0,b.jsx)("option",{value:a.id,children:a.name},a.id))]})}])}];
+
+//# sourceMappingURL=src_app_dashboard_admin_assignments_AssignmentForm_tsx_0e-qf14._.js.map
