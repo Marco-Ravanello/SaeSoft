@@ -21,11 +21,17 @@ Este software ha sido diseñado para digitalizar el proceso de remitos y control
 - **Flujo de Cupos:** Las escuelas solicitan cambios, el administrativo aprueba y la base de datos se actualiza automáticamente, notificando al proveedor.
 - **Remitos Digitales:** Estandarizados para una carga rápida por parte del proveedor.
 
-## Configuración de Desarrollo
+## Configuración de Desarrollo Local
 1. `npm install`
 2. `npx prisma generate`
 3. `npx prisma db push`
 4. `npm run dev`
+
+## Emulación en Google Colab
+Para facilitar las pruebas sin necesidad de instalar nada localmente, se ha incluido el archivo `SaeSoft_Colab.ipynb`.
+1. Sube los archivos del proyecto a una carpeta en Google Drive o clónalo directamente en Colab.
+2. Abre `SaeSoft_Colab.ipynb` en Google Colab.
+3. Ejecuta las celdas en orden. El sistema te proporcionará un enlace público de `localtunnel` para acceder a la aplicación.
 
 **Credenciales Iniciales:**
 - **Usuario:** admin
