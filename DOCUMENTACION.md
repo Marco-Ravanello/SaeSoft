@@ -29,9 +29,10 @@ Este software ha sido diseñado para digitalizar el proceso de remitos y control
 
 ## Emulación en Google Colab
 Para facilitar las pruebas sin necesidad de instalar nada localmente, se ha incluido el archivo `SaeSoft_Colab.ipynb`.
-1. Sube los archivos del proyecto a una carpeta en Google Drive o clónalo directamente en Colab.
-2. Abre `SaeSoft_Colab.ipynb` en Google Colab.
-3. Ejecuta las celdas en orden. El sistema te proporcionará un enlace público de `localtunnel` para acceder a la aplicación.
+1. Abre Google Colab y sube el archivo `SaeSoft_Colab.ipynb`.
+2. Si los archivos del proyecto no están en Colab, usa la **Celda 0** del notebook para clonar el repositorio.
+3. Ejecuta la **Celda 1** (Instalación). Si pide confirmar la instalación de Prisma, el comando `-y` debería evitar el bloqueo, pero estate atento a los logs.
+4. Ejecuta la **Celda 2** (Servidor). Copia la dirección IP que aparece y pégala en la página de `localtunnel` que se abrirá al hacer clic en el enlace generado.
 
 **Credenciales Iniciales:**
 - **Usuario:** admin
