@@ -3,6 +3,9 @@ import prisma from "@/lib/prisma"
 import { NextResponse } from "next/server"
 
 export async function PATCH(req: Request, { params }: { params: any }) {
+  const session = await auth();
+  if ((session?.user as any)?.role !== "SCHOOL") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+
   const { id } = await params
   const { signature } = await req.json()
   await prisma.deliveryNote.update({

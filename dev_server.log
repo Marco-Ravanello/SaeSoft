@@ -6,15 +6,31 @@
 - Local:         http://localhost:3000
 - Network:       http://192.168.0.2:3000
 - Environments: .env
-✓ Ready in 591ms
+✓ Ready in 1167ms
 
-○ Compiling /login ...
- GET /login 200 in 4.6s (next.js: 3.8s, proxy.ts: 517ms, application-code: 271ms)
- GET /api/auth/providers 200 in 2.4s
- GET /login?callbackUrl=%2Fdashboard%2Fschool%2Fdeliveries%2Ffake-id%2Fsign 200 in 345ms (next.js: 14ms, proxy.ts: 36ms, application-code: 295ms)
- GET /login 200 in 91ms (next.js: 8ms, proxy.ts: 11ms, application-code: 72ms)
- GET /api/auth/providers 200 in 55ms (next.js: 40ms, application-code: 14ms)
- GET /api/auth/csrf 200 in 11ms (next.js: 4ms, application-code: 7ms)
- POST /api/auth/callback/credentials? 200 in 674ms (next.js: 3ms, application-code: 671ms)
- GET /dashboard 200 in 2.3s (next.js: 1600ms, proxy.ts: 28ms, application-code: 630ms)
- GET /dashboard/school/deliveries/fake-id/sign 200 in 3.2s (next.js: 3.0s, proxy.ts: 21ms, application-code: 199ms)
+ GET /login 200 in 2.2s (next.js: 434ms, proxy.ts: 1345ms, application-code: 420ms)
+ GET /api/auth/providers 200 in 1480ms (next.js: 1422ms, application-code: 58ms)
+ GET /api/auth/csrf 200 in 37ms (next.js: 26ms, application-code: 10ms)
+ POST /api/auth/callback/credentials? 200 in 348ms (next.js: 4ms, application-code: 343ms)
+ GET /dashboard 200 in 588ms (next.js: 74ms, proxy.ts: 54ms, application-code: 460ms)
+ GET /login 200 in 108ms (next.js: 13ms, proxy.ts: 14ms, application-code: 81ms)
+ GET /api/auth/providers 200 in 44ms (next.js: 32ms, application-code: 12ms)
+ GET /api/auth/csrf 200 in 15ms (next.js: 4ms, application-code: 11ms)
+ POST /api/auth/callback/credentials? 200 in 164ms (next.js: 5ms, application-code: 160ms)
+ GET /dashboard 200 in 159ms (next.js: 12ms, proxy.ts: 20ms, application-code: 128ms)
+ GET /dashboard/admin/users 200 in 1748ms (next.js: 1467ms, proxy.ts: 16ms, application-code: 266ms)
+ GET /login 200 in 77ms (next.js: 6ms, proxy.ts: 8ms, application-code: 63ms)
+ GET /api/auth/providers 200 in 49ms (next.js: 32ms, application-code: 17ms)
+ GET /api/auth/csrf 200 in 13ms (next.js: 3ms, application-code: 10ms)
+ POST /api/auth/callback/credentials? 200 in 155ms (next.js: 3ms, application-code: 152ms)
+ GET /dashboard 200 in 129ms (next.js: 4ms, proxy.ts: 15ms, application-code: 110ms)
+ GET /dashboard/admin/users/new 200 in 1694ms (next.js: 1527ms, proxy.ts: 32ms, application-code: 135ms)
+✓ Compiled in 59ms
+ GET /login 200 in 99ms (next.js: 7ms, proxy.ts: 12ms, application-code: 80ms)
+ GET /api/auth/providers 200 in 43ms (next.js: 33ms, application-code: 10ms)
+ GET /api/auth/csrf 200 in 10ms (next.js: 4ms, application-code: 6ms)
+ POST /api/auth/callback/credentials? 200 in 158ms (next.js: 3ms, application-code: 154ms)
+Dashboard Page Auth: true
+ GET /dashboard 200 in 153ms (next.js: 11ms, proxy.ts: 17ms, application-code: 126ms)
+ GET /dashboard/admin/users 200 in 136ms (next.js: 4ms, proxy.ts: 15ms, application-code: 117ms)
+✓ Compiled in 40ms

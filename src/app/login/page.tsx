@@ -22,18 +22,15 @@ function LoginContent() {
     setError("")
 
     try {
-      const result = await signIn("credentials", {
+      const result: any = await signIn("credentials", {
         username,
         password,
-        redirect: false,
+        callbackUrl,
       })
 
       if (result?.error) {
         setError("Usuario o contraseña incorrectos")
         setLoading(false)
-      } else {
-        // Redirigir manualmente para asegurar que ocurra
-        window.location.href = callbackUrl
       }
     } catch (err) {
       setError("Error de conexión con el servidor")

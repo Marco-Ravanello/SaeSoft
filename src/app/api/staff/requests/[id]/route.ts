@@ -9,10 +9,28 @@ export async function PATCH(req: Request, { params }: { params: any }) {
   const { action, type } = await req.json() // action: 'APPROVED' or 'REJECTED'
 
   if (type === "quota") {
-    await prisma.quotaChangeRequest.update({
+    const request = await prisma.quotaChangeRequest.update({
       where: { id },
-      data: { status: action }
+      data: { status: action, resolvedAt: action === "APPROVED" ? new Date() : null },
+      include: { school: true }
     })
+
+    if (action === "APPROVED") {
+      await prisma.schoolService.upsert({
+        where: {
+          schoolId_serviceType: {
+            schoolId: request.schoolId,
+            serviceType: request.serviceType
+          }
+        },
+        update: { quota: request.newQuota },
+        create: {
+          schoolId: request.schoolId,
+          serviceType: request.serviceType,
+          quota: request.newQuota
+        }
+      })
+    }
   } else if (type === "claim") {
     await prisma.claim.update({
       where: { id },
