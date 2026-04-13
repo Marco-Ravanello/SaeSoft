@@ -1,19 +1,23 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { LogIn, User, Lock, AlertCircle, Loader2 } from "lucide-react"
 
-export default function LoginPage() {
+function LoginContent() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (loading) return
+
     setLoading(true)
     setError("")
 
@@ -28,8 +32,8 @@ export default function LoginPage() {
         setError("Usuario o contraseña incorrectos")
         setLoading(false)
       } else {
-        router.push("/dashboard")
-        router.refresh()
+        // Redirigir manualmente para asegurar que ocurra
+        window.location.href = callbackUrl
       }
     } catch (err) {
       setError("Error de conexión con el servidor")
@@ -39,10 +43,10 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <div className="max-w-md w-full">
+      <div className="max-w-md w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
         {/* Header / Logo */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-200 mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-200 mb-4 ring-4 ring-white">
             <LogIn size={32} />
           </div>
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
@@ -54,7 +58,7 @@ export default function LoginPage() {
         </div>
 
         {/* Login Card */}
-        <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 p-8 border border-slate-100">
+        <div className="bg-white rounded-3xl shadow-2xl shadow-slate-200/60 p-8 border border-slate-100">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
@@ -69,7 +73,7 @@ export default function LoginPage() {
                   required
                   autoFocus
                   className="block w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                  placeholder="Ej: admin"
+                  placeholder="Introduce tu usuario"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   disabled={loading}
@@ -107,12 +111,12 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-[0.98]"
+              className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-[0.98] disabled:active:scale-100"
             >
               {loading ? (
                 <>
                   <Loader2 size={20} className="animate-spin" />
-                  <span>Iniciando sesión...</span>
+                  <span>Validando...</span>
                 </>
               ) : (
                 <span>Entrar al Sistema</span>
@@ -127,5 +131,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50 px-4"><Loader2 className="animate-spin text-blue-600" size={48} /></div>}>
+      <LoginContent />
+    </Suspense>
   )
 }

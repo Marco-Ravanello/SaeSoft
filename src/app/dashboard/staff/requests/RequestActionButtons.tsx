@@ -3,12 +3,12 @@ import { useRouter } from "next/navigation"
 
 export default function RequestActionButtons({ requestId, type }: { requestId: string, type: "quota" | "claim" }) {
   const router = useRouter()
-  const handleAction = async (status: "APPROVED" | "REJECTED") => {
-    const endpoint = type === "quota" ? "/api/staff/quota-requests" : "/api/staff/claims"
-    await fetch(endpoint, {
+
+  const handleAction = async (action: "APPROVED" | "REJECTED") => {
+    await fetch(`/api/staff/requests/${requestId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ requestId, status }),
+      body: JSON.stringify({ action, type }),
     })
     router.refresh()
   }
