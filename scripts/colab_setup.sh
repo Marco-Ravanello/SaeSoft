@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 echo "🚀 Iniciando configuración de SaeSoft 3F..."
 
 # 1. Instalación de Node.js 20 si no existe
@@ -10,7 +11,7 @@ fi
 
 # 2. Instalación de dependencias
 echo "📥 Instalando dependencias de Node.js..."
-npm install &> /dev/null
+npm install
 
 # 3. Configuración de .env
 echo "📝 Configurando variables de entorno..."
@@ -22,11 +23,11 @@ EOF
 
 # 4. Preparación de Base de Datos
 echo "🗄️ Configurando base de datos Prisma..."
-npx prisma generate &> /dev/null
-npx prisma db push --accept-data-loss &> /dev/null
+npx --yes prisma generate
+npx --yes prisma db push --accept-data-loss
 
 # 5. Seed de datos
 echo "🌱 Cargando datos iniciales..."
-npx ts-node --compiler-options '{"module":"CommonJS"}' prisma/seed.ts &> /dev/null
+npx --yes ts-node --compiler-options '{"module":"CommonJS"}' prisma/seed.ts
 
 echo "✅ Configuración finalizada correctamente."
