@@ -7,12 +7,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   cookies: {
     sessionToken: {
-      name: `authjs.session-token`,
+      name: `next-auth.session-token`,
       options: {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: false,
+        secure: true, // Debe ser true para HTTPS de localtunnel
       },
     },
   },

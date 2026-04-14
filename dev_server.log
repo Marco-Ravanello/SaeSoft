@@ -35,3 +35,4 @@ Dashboard Page Auth: true
  GET /dashboard/admin/users 200 in 136ms (next.js: 4ms, proxy.ts: 15ms, application-code: 117ms)
 ✓ Compiled in 40ms
 ✓ Compiled in 1675ms
+✓ Compiled in 1445ms
