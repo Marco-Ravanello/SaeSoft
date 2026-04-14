@@ -25,12 +25,14 @@ function LoginContent() {
       const result: any = await signIn("credentials", {
         username,
         password,
-        callbackUrl,
+        redirect: false,
       })
 
       if (result?.error) {
         setError("Usuario o contraseña incorrectos")
         setLoading(false)
+      } else {
+        window.location.href = callbackUrl
       }
     } catch (err) {
       setError("Error de conexión con el servidor")
