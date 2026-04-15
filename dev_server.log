@@ -33,3 +33,7 @@
  POST /api/auth/signout 200 in 28ms
  GET /login 200 in 50ms
  ✓ Compiled in 333ms (325 modules)
+ ✓ Compiled in 5.1s (325 modules)
+ ✓ Compiled in 275ms (325 modules)
+ ✓ Compiled in 285ms (325 modules)
+ ✓ Compiled in 1658ms (1118 modules)

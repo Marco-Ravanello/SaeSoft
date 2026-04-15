@@ -30,4 +30,8 @@ npx --yes prisma db push --accept-data-loss
 echo "🌱 Cargando datos iniciales..."
 npx --yes ts-node --compiler-options '{"module":"CommonJS"}' prisma/seed.ts
 
+# 6. Build para Producción
+echo "🏗️ Compilando aplicación para producción (esto agiliza el uso del software)..."
+npm run build
+
 echo "✅ Configuración finalizada correctamente."
