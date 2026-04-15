@@ -8,11 +8,11 @@ export default async function StaffDeliveryNotesPage() {
   })
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Control de Remitos</h1>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold text-slate-900 mb-8">Control de Remitos</h1>
       <div className="bg-white shadow rounded overflow-hidden">
         <table className="min-w-full">
-          <thead className="bg-gray-100">
+          <thead className="bg-slate-50">
             <tr>
               <th className="p-3 text-left">Fecha</th>
               <th className="p-3 text-left">Proveedor</th>

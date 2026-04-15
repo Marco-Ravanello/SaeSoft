@@ -9,11 +9,11 @@ export default async function SchoolDeliveriesPage() {
   })
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Recepción de Mercadería</h1>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold text-slate-900 mb-8">Recepción de Mercadería</h1>
       <div className="space-y-4">
         {school?.deliveryNotes.map(dn => (
-          <div key={dn.id} className="bg-white p-6 rounded shadow flex justify-between items-center border">
+          <div key={dn.id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center border">
             <div>
               <p className="text-sm text-gray-500">{new Date(dn.date).toLocaleDateString()}</p>
               <h3 className="font-bold">{dn.provider.name}</h3>

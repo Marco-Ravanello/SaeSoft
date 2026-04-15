@@ -13,8 +13,8 @@ export default async function Page() {
   })
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Mis Escuelas Asignadas</h1>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold text-slate-900 mb-4">Mis Escuelas Asignadas</h1>
       <div className="grid grid-cols-1 gap-4">
         {p?.schools.map(sc => (
           <div key={sc.id} className="p-6 bg-white shadow rounded-xl border flex justify-between items-center">

@@ -6,7 +6,7 @@ export default function Page() {
     if (res.ok) { router.push("/dashboard/admin/users"); router.refresh() }
   }
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow">
+    <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-sm border border-slate-200">
       <h1 className="text-xl font-bold mb-4">Nuevo Usuario</h1>
       <form onSubmit={sub} className="space-y-4">
         <input type="text" placeholder="Nombre" className="w-full border p-2" onChange={e=>setF({...f, name:e.target.value})} required />

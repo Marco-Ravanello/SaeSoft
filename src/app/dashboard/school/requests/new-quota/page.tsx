@@ -19,8 +19,8 @@ export default function NewQuotaPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow mt-12">
-      <h1 className="text-xl font-bold mb-6">Solicitar Cambio de Cupo</h1>
+    <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-12">
+      <h1 className="text-xl font-bold mb-8">Solicitar Cambio de Cupo</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">Servicio</label>

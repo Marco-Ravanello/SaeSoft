@@ -21,12 +21,12 @@ export default async function StaffRequestsPage() {
   })
 
   return (
-    <div className="p-8 space-y-12">
+    <div className="space-y-6 space-y-12">
       <section>
-        <h1 className="text-2xl font-bold mb-6">Solicitudes de Cambio de Cupo</h1>
+        <h1 className="text-3xl font-bold text-slate-900 mb-8">Solicitudes de Cambio de Cupo</h1>
         <div className="space-y-4">
           {quotaRequests.map(r => (
-            <div key={r.id} className="bg-white p-4 rounded shadow border flex justify-between items-center">
+            <div key={r.id} className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border flex justify-between items-center">
               <div>
                 <p className="font-bold">{r.school.name}</p>
                 <p className="text-sm text-gray-600">{r.serviceType}: {r.newQuota} cupos</p>
@@ -39,10 +39,10 @@ export default async function StaffRequestsPage() {
       </section>
 
       <section>
-        <h1 className="text-2xl font-bold mb-6 text-red-700">Reclamos y Faltantes</h1>
+        <h1 className="text-3xl font-bold text-slate-900 mb-8 text-red-700">Reclamos y Faltantes</h1>
         <div className="space-y-4">
           {claims.map(c => (
-            <div key={c.id} className="bg-white p-4 rounded shadow border border-red-100 flex justify-between items-center">
+            <div key={c.id} className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border border-red-100 flex justify-between items-center">
               <div>
                 <p className="font-bold">{c.school.name}</p>
                 <p className="text-sm text-gray-700">{c.description}</p>

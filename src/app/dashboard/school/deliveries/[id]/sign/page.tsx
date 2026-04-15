@@ -41,11 +41,11 @@ export default function SignDeliveryPage({ params }: { params: any }) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-8 rounded-3xl shadow-2xl mt-12 border border-slate-100">
+    <div className="max-w-2xl mx-auto bg-white space-y-6 rounded-3xl shadow-2xl mt-12 border border-slate-100">
       <h1 className="text-3xl font-extrabold text-slate-900 mb-2 text-center">Firma Digital</h1>
       <p className="text-slate-500 text-center mb-8">Por favor, dibuje su firma y sello en el recuadro de abajo.</p>
 
-      <div className="border-2 border-slate-200 rounded-2xl overflow-hidden bg-slate-50 mb-6">
+      <div className="border-2 border-slate-200 rounded-2xl overflow-hidden bg-slate-50 mb-8">
         <SignatureCanvas
           ref={sigCanvas}
           penColor="black"
