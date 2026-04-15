@@ -28,8 +28,8 @@ export default function SignDeliveryPage({ params }: { params: any }) {
       })
 
       if (response.ok) {
-        router.push("/dashboard/school/deliveries")
-        router.refresh()
+        // Redirección manual para evitar problemas de caché o proxy
+        window.location.href = "/dashboard/school/deliveries"
       } else {
         alert("Error al guardar la firma")
       }

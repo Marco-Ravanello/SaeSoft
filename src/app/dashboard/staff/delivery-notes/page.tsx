@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma"
 import { auth } from "@/auth"
+import { translateStatus } from "@/lib/utils"
 
 export default async function StaffDeliveryNotesPage() {
   const deliveryNotes = await prisma.deliveryNote.findMany({
@@ -30,7 +31,7 @@ export default async function StaffDeliveryNotesPage() {
                   <span className={`px-2 py-1 rounded text-xs font-bold ${
                     dn.status === "SIGNED" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
                   }`}>
-                    {dn.status}
+                    {translateStatus(dn.status)}
                   </span>
                 </td>
               </tr>

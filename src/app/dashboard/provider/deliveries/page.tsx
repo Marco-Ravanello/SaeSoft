@@ -1,4 +1,7 @@
-import prisma from "@/lib/prisma"; import { auth } from "@/auth"
+import prisma from "@/lib/prisma";
+import { auth } from "@/auth"
+import { translateService } from "@/lib/utils"
+
 export default async function Page() {
   const s = await auth();
   const p = await prisma.provider.findUnique({
@@ -23,7 +26,7 @@ export default async function Page() {
               <div className="mt-2 space-y-1">
                 {sc.services.map(svc => (
                   <p key={svc.id} className="text-sm text-slate-600">
-                    <span className="font-semibold">{svc.serviceType}:</span> {svc.quota} cupos
+                    <span className="font-semibold">{translateService(svc.serviceType)}:</span> {svc.quota} cupos
                   </p>
                 ))}
               </div>

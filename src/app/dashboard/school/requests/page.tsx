@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma"
 import { auth } from "@/auth"
+import { translateStatus, translateService } from "@/lib/utils"
 
 export default async function SchoolRequestsPage() {
   const session = await auth()
@@ -24,8 +25,13 @@ export default async function SchoolRequestsPage() {
           <div className="space-y-2">
             {school?.quotaRequests.map(r => (
               <div key={r.id} className="bg-white p-3 rounded-xl shadow-sm border border-slate-200 flex justify-between">
-                <span>{r.serviceType}: {r.newQuota}</span>
-                <span className="text-xs font-bold uppercase">{r.status}</span>
+                <span>{translateService(r.serviceType)}: <strong>{r.newQuota}</strong></span>
+                <span className={`text-xs font-bold px-2 py-1 rounded ${
+                  r.status === 'APPROVED' ? 'bg-green-100 text-green-700' :
+                  r.status === 'REJECTED' ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-600'
+                }`}>
+                  {translateStatus(r.status)}
+                </span>
               </div>
             ))}
           </div>
@@ -36,7 +42,12 @@ export default async function SchoolRequestsPage() {
             {school?.claims.map(c => (
               <div key={c.id} className="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
                 <p className="text-sm">{c.description}</p>
-                <p className="text-xs font-bold uppercase mt-2">{c.status}</p>
+                <p className={`text-xs font-bold mt-2 inline-block px-2 py-1 rounded ${
+                  c.status === 'APPROVED' ? 'bg-green-100 text-green-700' :
+                  c.status === 'REJECTED' ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-600'
+                }`}>
+                  {translateStatus(c.status)}
+                </p>
               </div>
             ))}
           </div>

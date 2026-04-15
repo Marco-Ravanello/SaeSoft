@@ -20,13 +20,9 @@ export default async function SchoolDeliveriesPage() {
               <p className="text-gray-700 mt-2">{dn.items}</p>
             </div>
             <div>
-              {dn.status === "PENDING" ? (
-                <a href={`/dashboard/school/deliveries/${dn.id}/sign`} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                  Ver y Firmar
-                </a>
-              ) : (
-                <span className="bg-green-100 text-green-700 px-3 py-1 rounded text-sm font-bold">FIRMADO</span>
-              )}
+              <a href={`/dashboard/school/deliveries/${dn.id}`} className="bg-slate-800 text-white px-4 py-2 rounded hover:bg-slate-700 transition-colors">
+                Ver Remito
+              </a>
             </div>
           </div>
         ))}

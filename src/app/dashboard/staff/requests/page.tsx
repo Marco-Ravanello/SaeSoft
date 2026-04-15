@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import RequestActionButtons from "./RequestActionButtons"
+import { translateService } from "@/lib/utils"
 
 export default async function StaffRequestsPage() {
   const session = await auth()
@@ -28,8 +29,8 @@ export default async function StaffRequestsPage() {
           {quotaRequests.map(r => (
             <div key={r.id} className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border flex justify-between items-center">
               <div>
-                <p className="font-bold">{r.school.name}</p>
-                <p className="text-sm text-gray-600">{r.serviceType}: {r.newQuota} cupos</p>
+                <p className="font-bold text-slate-900">{r.school.name}</p>
+                <p className="text-sm text-slate-600">{translateService(r.serviceType)}: <span className="font-bold text-blue-600">{r.newQuota}</span> cupos</p>
               </div>
               <RequestActionButtons requestId={r.id} type="quota" />
             </div>
