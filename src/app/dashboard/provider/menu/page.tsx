@@ -1,8 +1,10 @@
 import prisma from "@/lib/prisma"
 import { auth } from "@/auth"
+import { redirect } from "next/navigation"
 
 export default async function ProviderMenuPage() {
   const session = await auth()
+  if (!session) redirect("/login")
   const provider = await prisma.provider.findUnique({
     where: { userId: (session?.user as any).id }
   })

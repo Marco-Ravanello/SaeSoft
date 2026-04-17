@@ -5,9 +5,12 @@ import { translateStatus } from "@/lib/utils"
 import { Calendar, Truck, School, ClipboardCheck, AlertTriangle } from "lucide-react"
 import Link from "next/link"
 import RejectDeliveryButton from "@/components/RejectDeliveryButton"
+import PrintButton from "@/components/PrintButton"
 
 export default async function DeliveryNoteDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
+  if (!session) redirect("/login")
+
   const { id } = await params
 
   const dn = await prisma.deliveryNote.findUnique({
@@ -30,12 +33,7 @@ export default async function DeliveryNoteDetailsPage({ params }: { params: Prom
         <Link href="/dashboard/school/deliveries" className="text-slate-500 hover:text-slate-800 transition-colors flex items-center gap-2">
           ← Volver a entregas
         </Link>
-        <button
-          onClick={() => window.print()}
-          className="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold hover:bg-slate-700 transition-all flex items-center gap-2"
-        >
-          <ClipboardCheck size={18} /> Imprimir Remito
-        </button>
+        <PrintButton />
       </div>
 
       {/* Papel Digital */}
@@ -121,12 +119,12 @@ export default async function DeliveryNoteDetailsPage({ params }: { params: Prom
             </div>
           </div>
           <div className="relative border-2 border-dashed border-slate-200 p-6 flex flex-col items-center justify-center min-h-[160px] rounded-lg">
-            {dn.signature ? (
+            {dn.signature && dn.signedAt ? (
               <>
                 <img src={dn.signature} alt="Firma digital" className="max-h-[120px] object-contain mb-2" />
                 <div className="text-center">
                   <p className="text-[10px] font-bold text-slate-400 uppercase">Firmado Digitalmente el</p>
-                  <p className="text-xs font-black text-slate-900">{new Date(dn.signedAt!).toLocaleString('es-AR')}</p>
+                  <p className="text-xs font-black text-slate-900">{new Date(dn.signedAt).toLocaleString('es-AR')}</p>
                 </div>
               </>
             ) : (

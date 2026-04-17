@@ -1,8 +1,12 @@
 import prisma from "@/lib/prisma"
 import { auth } from "@/auth"
 
+import { redirect } from "next/navigation"
+
 export default async function SchoolMenuPage() {
   const session = await auth()
+  if (!session) redirect("/login")
+
   const school = await prisma.school.findUnique({
     where: { userId: (session?.user as any).id }
   })
