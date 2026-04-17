@@ -9,11 +9,14 @@ export async function PATCH(req: Request, { params }: { params: any }) {
   const { id } = await params
   const { signature } = await req.json()
 
+  console.log(`[API] Firmando remito ${id}. Tamaño de firma: ${Math.round((signature?.length || 0) / 1024)} KB`)
+
   try {
-    await prisma.deliveryNote.update({
+    const updated = await prisma.deliveryNote.update({
       where: { id },
       data: { status: "SIGNED", signature, signedAt: new Date() }
     })
+    console.log(`[API] Remito ${id} firmado exitosamente.`)
     return NextResponse.json({ ok: true })
   } catch (error) {
     console.error("Error saving signature:", error)

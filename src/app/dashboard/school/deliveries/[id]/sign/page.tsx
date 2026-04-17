@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 export default function SignDeliveryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [SignatureCanvas, setSignatureCanvas] = useState<any>(null)
   const sigCanvas = useRef<any>(null)
@@ -25,12 +26,16 @@ export default function SignDeliveryPage({ params }: { params: Promise<{ id: str
     }
 
     setLoading(true)
-    const signatureData = sigCanvas.current?.getTrimmedCanvas().toDataURL("image/png")
+    // Comprimimos a JPEG con calidad 0.2 para reducir drásticamente el peso del payload.
+    // Para firmas en blanco y negro, 0.2 es más que suficiente y ahorra mucho espacio.
+    const signatureData = sigCanvas.current?.getTrimmedCanvas().toDataURL("image/jpeg", 0.2)
+
+    console.log(`[Client] Enviando firma. Tamaño: ${Math.round(signatureData.length / 1024)} KB`)
 
     try {
-      // Timeout de 15 segundos para la petición
+      // Timeout de 45 segundos para la petición considerando conexiones lentas o túneles
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const timeoutId = setTimeout(() => controller.abort(), 45000);
 
       const response = await fetch(`/api/school/delivery-notes/${id}/sign`, {
         method: "PATCH",
@@ -42,8 +47,13 @@ export default function SignDeliveryPage({ params }: { params: Promise<{ id: str
       clearTimeout(timeoutId);
 
       if (response.ok) {
+        console.log("[Client] Firma guardada con éxito. Redirigiendo...")
+        setSuccess(true)
+        setLoading(false)
         // Redirección forzada eliminando historial para asegurar que no se quede trabado
-        window.location.replace("/dashboard/school/deliveries");
+        setTimeout(() => {
+          window.location.replace("/dashboard/school/deliveries");
+        }, 1500)
       } else {
         const errorData = await response.json().catch(() => ({}));
         alert(`Error al guardar: ${errorData.error || "Servidor no responde"}`);
@@ -66,12 +76,15 @@ export default function SignDeliveryPage({ params }: { params: Promise<{ id: str
       <h1 className="text-3xl font-extrabold text-slate-900 mb-2 text-center">Firma Digital</h1>
       <p className="text-slate-500 text-center mb-8">Por favor, dibuje su firma y sello en el recuadro de abajo.</p>
 
-      <div className="border-2 border-slate-200 rounded-2xl overflow-hidden bg-slate-50 mb-8 h-64">
+      <div className="border-2 border-slate-200 rounded-2xl overflow-hidden bg-slate-50 mb-8 h-64 flex items-center justify-center">
+        {/* Forzamos un ancho/alto interno fijo para que la imagen resultante no sea gigante en pantallas Retina/4K */}
         <SignatureCanvas
           ref={sigCanvas}
           penColor="black"
           canvasProps={{
-            className: "signature-canvas w-full h-64 cursor-crosshair"
+            width: 600,
+            height: 250,
+            className: "signature-canvas cursor-crosshair bg-white"
           }}
         />
       </div>
@@ -86,10 +99,14 @@ export default function SignDeliveryPage({ params }: { params: Promise<{ id: str
         </button>
         <button
           onClick={handleSign}
-          disabled={loading}
-          className="flex-[2] bg-blue-600 text-white p-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 disabled:bg-blue-300"
+          disabled={loading || success}
+          className={`flex-[2] p-4 rounded-xl font-bold transition-all shadow-lg ${
+            success
+              ? "bg-green-600 text-white shadow-green-200"
+              : "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-200 disabled:bg-blue-300"
+          }`}
         >
-          {loading ? "Guardando..." : "Firmar y Confirmar"}
+          {loading ? "Guardando..." : success ? "✓ ¡Firmado!" : "Firmar y Confirmar"}
         </button>
       </div>
     </div>

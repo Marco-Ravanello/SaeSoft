@@ -7,15 +7,4 @@
    - Network:      http://192.168.0.2:3000
 
  ✓ Starting...
- ✓ Ready in 626ms
-[31m[auth][error][0m CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
-    at iQ (/app/.next/server/chunks/754.js:404:43703)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async i9 (/app/.next/server/chunks/754.js:404:53107)
-    at async oe (/app/.next/server/chunks/754.js:404:57371)
-    at async tr.do (/app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17558)
-    at async tr.handle (/app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:22072)
-    at async doRender (/app/node_modules/next/dist/server/base-server.js:1452:42)
-    at async responseGenerator (/app/node_modules/next/dist/server/base-server.js:1813:28)
-    at async NextNodeServer.renderToResponseWithComponentsImpl (/app/node_modules/next/dist/server/base-server.js:1823:28)
-    at async NextNodeServer.renderPageComponent (/app/node_modules/next/dist/server/base-server.js:2250:24)
+ ✓ Ready in 2s
