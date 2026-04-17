@@ -8,9 +8,15 @@ export async function PATCH(req: Request, { params }: { params: any }) {
 
   const { id } = await params
   const { signature } = await req.json()
-  await prisma.deliveryNote.update({
-    where: { id },
-    data: { status: "SIGNED", signature, signedAt: new Date() }
-  })
-  return NextResponse.json({ ok: true })
+
+  try {
+    await prisma.deliveryNote.update({
+      where: { id },
+      data: { status: "SIGNED", signature, signedAt: new Date() }
+    })
+    return NextResponse.json({ ok: true })
+  } catch (error) {
+    console.error("Error saving signature:", error)
+    return NextResponse.json({ error: "Error interno al guardar" }, { status: 500 })
+  }
 }

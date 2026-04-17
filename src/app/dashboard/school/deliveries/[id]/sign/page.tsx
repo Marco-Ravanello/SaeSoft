@@ -28,21 +28,34 @@ export default function SignDeliveryPage({ params }: { params: Promise<{ id: str
     const signatureData = sigCanvas.current?.getTrimmedCanvas().toDataURL("image/png")
 
     try {
+      // Timeout de 15 segundos para la petición
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+
       const response = await fetch(`/api/school/delivery-notes/${id}/sign`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ signature: signatureData }),
-      })
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
-        window.location.href = "/dashboard/school/deliveries"
+        // Redirección forzada eliminando historial para asegurar que no se quede trabado
+        window.location.replace("/dashboard/school/deliveries");
       } else {
-        alert("Error al guardar la firma")
+        const errorData = await response.json().catch(() => ({}));
+        alert(`Error al guardar: ${errorData.error || "Servidor no responde"}`);
+        setLoading(false);
       }
-    } catch (error) {
-      alert("Error de conexión")
-    } finally {
-      setLoading(false)
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        alert("La conexión tardó demasiado. Por favor, intente de nuevo.");
+      } else {
+        alert("Error de conexión o datos demasiado pesados.");
+      }
+      setLoading(false);
     }
   }
 
