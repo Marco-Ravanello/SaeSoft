@@ -22,7 +22,7 @@ export default async function StaffRequestsPage() {
   })
 
   return (
-    <div className="space-y-6 space-y-12">
+    <div className="space-y-12">
       <section>
         <h1 className="text-3xl font-bold text-slate-900 mb-8">Solicitudes de Cambio de Cupo</h1>
         <div className="space-y-4">
