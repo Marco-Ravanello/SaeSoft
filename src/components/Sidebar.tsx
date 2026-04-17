@@ -63,6 +63,7 @@ export default async function Sidebar() {
         {role === "PROVIDER" && (
           <>
             <SectionTitle>Proveedor</SectionTitle>
+            <NavLink href="/dashboard/provider/menu" icon={Utensils}>Mi Menú</NavLink>
             <NavLink href="/dashboard/provider/deliveries" icon={Truck}>Entregas</NavLink>
           </>
         )}
@@ -70,6 +71,7 @@ export default async function Sidebar() {
         {role === "SCHOOL" && (
           <>
             <SectionTitle>Escuela</SectionTitle>
+            <NavLink href="/dashboard/school/menu" icon={Utensils}>Menú Semanal</NavLink>
             <NavLink href="/dashboard/school/deliveries" icon={School}>Recepción</NavLink>
             <NavLink href="/dashboard/school/requests" icon={ClipboardList}>Mis Pedidos</NavLink>
           </>

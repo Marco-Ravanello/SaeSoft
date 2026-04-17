@@ -1,22 +1,22 @@
 import prisma from "@/lib/prisma"
 import { auth } from "@/auth"
 
-export default async function ProviderMenuPage() {
+export default async function SchoolMenuPage() {
   const session = await auth()
-  const provider = await prisma.provider.findUnique({
+  const school = await prisma.school.findUnique({
     where: { userId: (session?.user as any).id }
   })
 
-  const menu = await prisma.menu.findFirst({
-    where: { providerId: provider?.id },
+  const menu = school?.providerId ? await prisma.menu.findFirst({
+    where: { providerId: school.providerId },
     include: { dishes: { include: { ingredients: true } } },
     orderBy: { startDate: "desc" }
-  })
+  }) : null
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight italic">Mi Menú Semanal</h1>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight italic">Menú Semanal</h1>
       </div>
 
       {menu ? (
@@ -46,7 +46,7 @@ export default async function ProviderMenuPage() {
         </div>
       ) : (
         <div className="bg-white p-12 rounded-3xl border-2 border-dashed border-slate-200 text-center">
-          <p className="text-slate-400 font-bold uppercase tracking-widest italic">No se ha cargado un menú para su empresa aún.</p>
+          <p className="text-slate-400 font-bold uppercase tracking-widest italic">Aún no se ha cargado el menú para tu proveedor.</p>
         </div>
       )}
     </div>

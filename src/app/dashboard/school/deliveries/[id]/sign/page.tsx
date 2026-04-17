@@ -1,13 +1,20 @@
 "use client"
-import { use, useState, useRef } from "react"
+import { use, useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import SignatureCanvas from "react-signature-canvas"
 
 export default function SignDeliveryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
-  const sigCanvas = useRef<SignatureCanvas>(null)
+  const [mounted, setMounted] = useState(false)
+  const [SignatureCanvas, setSignatureCanvas] = useState<any>(null)
+  const sigCanvas = useRef<any>(null)
+
+  useEffect(() => {
+    setMounted(true)
+    import("react-signature-canvas").then((mod) => {
+      setSignatureCanvas(() => mod.default)
+    })
+  }, [])
 
   const clear = () => sigCanvas.current?.clear()
 
@@ -28,7 +35,6 @@ export default function SignDeliveryPage({ params }: { params: Promise<{ id: str
       })
 
       if (response.ok) {
-        // Redirección manual para evitar problemas de caché o proxy
         window.location.href = "/dashboard/school/deliveries"
       } else {
         alert("Error al guardar la firma")
@@ -40,12 +46,14 @@ export default function SignDeliveryPage({ params }: { params: Promise<{ id: str
     }
   }
 
+  if (!mounted || !SignatureCanvas) return <div className="p-12 text-center text-slate-400">Iniciando pad de firma...</div>
+
   return (
-    <div className="max-w-2xl mx-auto bg-white space-y-6 rounded-3xl shadow-2xl mt-12 border border-slate-100">
+    <div className="max-w-2xl mx-auto bg-white space-y-6 rounded-3xl shadow-2xl mt-12 border border-slate-100 p-8 animate-in fade-in zoom-in duration-300">
       <h1 className="text-3xl font-extrabold text-slate-900 mb-2 text-center">Firma Digital</h1>
       <p className="text-slate-500 text-center mb-8">Por favor, dibuje su firma y sello en el recuadro de abajo.</p>
 
-      <div className="border-2 border-slate-200 rounded-2xl overflow-hidden bg-slate-50 mb-8">
+      <div className="border-2 border-slate-200 rounded-2xl overflow-hidden bg-slate-50 mb-8 h-64">
         <SignatureCanvas
           ref={sigCanvas}
           penColor="black"
