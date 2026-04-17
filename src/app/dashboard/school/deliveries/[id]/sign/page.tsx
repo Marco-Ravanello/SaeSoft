@@ -3,8 +3,8 @@ import { use, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import SignatureCanvas from "react-signature-canvas"
 
-export default function SignDeliveryPage({ params }: { params: any }) {
-  const { id } = use(params) as any
+export default function SignDeliveryPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const sigCanvas = useRef<SignatureCanvas>(null)

@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
+import DeleteUserButton from "@/components/DeleteUserButton"
 
 export default async function Page() {
   const users = await prisma.user.findMany({
@@ -26,6 +27,7 @@ export default async function Page() {
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Nombre</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Rol</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Usuario</th>
+                <th className="px-6 py-4 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Acciones</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-slate-200">
@@ -43,6 +45,9 @@ export default async function Page() {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{u.username}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                    <DeleteUserButton userId={u.id} />
+                  </td>
                 </tr>
               ))}
             </tbody>

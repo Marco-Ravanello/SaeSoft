@@ -45,6 +45,7 @@ model Provider {
   userId        String         @unique
   schools       School[]
   deliveryNotes DeliveryNote[]
+  menus         Menu[]
 }
 model School {
   id            String               @id @default(cuid())
@@ -67,11 +68,13 @@ model SchoolService {
   @@unique([schoolId, serviceType])
 }
 model Menu {
-  id        String   @id @default(cuid())
-  name      String
-  startDate DateTime
-  endDate   DateTime
-  dishes    Dish[]
+  id         String   @id @default(cuid())
+  name       String
+  startDate  DateTime
+  endDate    DateTime
+  provider   Provider @relation(fields: [providerId], references: [id])
+  providerId String
+  dishes     Dish[]
 }
 model Dish {
   id          String       @id @default(cuid())

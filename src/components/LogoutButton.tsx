@@ -5,9 +5,10 @@ import { LogOut } from "lucide-react"
 
 export default function LogoutButton() {
   const handleLogout = async () => {
-    // Redirección manual para asegurar que funcione en entornos de proxy/túnel
+    // Forzar limpieza completa de cookies y sesión
     await signOut({ redirect: false })
-    window.location.href = "/login"
+    // Reemplazar el historial para evitar "volver atrás"
+    window.location.replace("/login")
   }
 
   return (

@@ -4,7 +4,14 @@ export async function POST(req: Request) {
   const role = (session?.user as any)?.role
   if (role !== "ADMIN" && role !== "STAFF") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
-  const { name, startDate, endDate } = await req.json()
-  const m = await prisma.menu.create({ data: { name, startDate: new Date(startDate), endDate: new Date(endDate) } })
+  const { name, startDate, endDate, providerId } = await req.json()
+  const m = await prisma.menu.create({
+    data: {
+      name,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+      providerId
+    }
+  })
   return NextResponse.json(m)
 }

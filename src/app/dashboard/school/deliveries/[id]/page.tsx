@@ -6,7 +6,7 @@ import { Calendar, Truck, School, ClipboardCheck, AlertTriangle } from "lucide-r
 import Link from "next/link"
 import RejectDeliveryButton from "@/components/RejectDeliveryButton"
 
-export default async function DeliveryNoteDetailsPage({ params }: { params: any }) {
+export default async function DeliveryNoteDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
   const { id } = await params
 

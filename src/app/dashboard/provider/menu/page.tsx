@@ -1,7 +1,14 @@
 import prisma from "@/lib/prisma"
+import { auth } from "@/auth"
 
 export default async function ProviderMenuPage() {
+  const session = await auth()
+  const provider = await prisma.provider.findUnique({
+    where: { userId: (session?.user as any).id }
+  })
+
   const menu = await prisma.menu.findFirst({
+    where: { providerId: provider?.id },
     include: { dishes: { include: { ingredients: true } } },
     orderBy: { startDate: "desc" }
   })
