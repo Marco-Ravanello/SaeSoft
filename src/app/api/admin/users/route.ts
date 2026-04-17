@@ -1,6 +1,12 @@
 import { auth } from "@/auth"; import prisma from "@/lib/prisma"; import { NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 
+export async function GET() {
+  const session = await auth(); if ((session?.user as any)?.role !== "ADMIN" && (session?.user as any)?.role !== "STAFF") return NextResponse.json({ error: "No" }, { status: 403 })
+  const users = await prisma.user.findMany({ include: { provider: true, school: true } })
+  return NextResponse.json(users)
+}
+
 export async function POST(req: Request) {
   const session = await auth(); if ((session?.user as any)?.role !== "ADMIN") return NextResponse.json({ error: "No" }, { status: 403 })
   const { username, password, name, role } = await req.json()

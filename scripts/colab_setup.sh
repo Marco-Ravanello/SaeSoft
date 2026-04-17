@@ -15,9 +15,11 @@ npm install
 
 # 3. Configuración de .env
 echo "📝 Configurando variables de entorno..."
+# Generar un secret aleatorio si no existe uno
+RANDOM_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
 cat <<EOF > .env
 DATABASE_URL="file:./dev.db"
-AUTH_SECRET="467ca6b9c63feb05a66756552793fd972094f1f3d8a35a76741f8e79f81872d7"
+AUTH_SECRET="$RANDOM_SECRET"
 AUTH_TRUST_HOST="true"
 EOF
 

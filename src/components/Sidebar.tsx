@@ -47,17 +47,18 @@ export default async function Sidebar() {
           <>
             <SectionTitle>Administración</SectionTitle>
             <NavLink href="/dashboard/admin/users" icon={Users}>Usuarios</NavLink>
-            <NavLink href="/dashboard/admin/assignments" icon={ArrowLeftRight}>Asignaciones</NavLink>
           </>
         )}
 
         {(role === "ADMIN" || role === "STAFF") && (
           <>
             <SectionTitle>Gestión SAE</SectionTitle>
+            <NavLink href="/dashboard/admin/assignments" icon={ArrowLeftRight}>Asignaciones</NavLink>
             <NavLink href="/dashboard/staff/menu" icon={Utensils}>Menú Semanal</NavLink>
             <NavLink href="/dashboard/staff/requests" icon={ClipboardList}>Solicitudes</NavLink>
           </>
         )}
+
 
         {role === "PROVIDER" && (
           <>
