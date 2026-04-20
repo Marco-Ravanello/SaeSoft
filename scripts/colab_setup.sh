@@ -26,7 +26,8 @@ AUTH_TRUST_HOST="true"
 EOF
 
 # 4. Preparación de Base de Datos
-echo "🗄️ Configurando base de datos Prisma..."
+echo "🗄️ Configurando base de datos Prisma (v7+)..."
+# Prisma 7 usa prisma.config.ts para la URL de migración
 npx --yes prisma generate
 npx --yes prisma db push --accept-data-loss
 
