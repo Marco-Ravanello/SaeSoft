@@ -17,8 +17,10 @@ npm install
 echo "📝 Configurando variables de entorno..."
 # Generar un secret aleatorio si no existe uno
 RANDOM_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
+# Usamos ruta absoluta para la base de datos para evitar errores 500
+ABS_DB_PATH=$(pwd)/dev.db
 cat <<EOF > .env
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="file:$ABS_DB_PATH"
 AUTH_SECRET="$RANDOM_SECRET"
 AUTH_TRUST_HOST="true"
 EOF
@@ -33,7 +35,8 @@ echo "🌱 Cargando datos iniciales..."
 npx --yes ts-node --compiler-options '{"module":"CommonJS"}' prisma/seed.ts
 
 # 6. Build para Producción
-echo "🏗️ Compilando aplicación para producción (esto agiliza el uso del software)..."
+echo "🏗️ Limpiando compilaciones previas y compilando para producción..."
+rm -rf .next
 npm run build
 
 echo "✅ Configuración finalizada correctamente."
