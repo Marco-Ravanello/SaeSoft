@@ -2,10 +2,10 @@
 set -e
 echo "🚀 Iniciando configuración de SaeSoft 3F..."
 
-# 1. Instalación de Node.js 20 si no existe
-if ! command -v node &> /dev/null || [[ $(node -v) != v20* ]]; then
-    echo "📦 Instalando Node.js 20..."
-    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - &> /dev/null
+# 1. Instalación de Node.js 22 si no existe (Requerido por Prisma 7.7+)
+if ! command -v node &> /dev/null || [[ $(node -v) != v22* ]]; then
+    echo "📦 Instalando Node.js 22..."
+    curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - &> /dev/null
     sudo apt-get install -y nodejs &> /dev/null
 fi
 
