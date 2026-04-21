@@ -1,8 +1,19 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaLibSql } from '@prisma/adapter-libsql'
+import { createClient } from '@libsql/client'
 import bcrypt from 'bcryptjs'
+import path from 'path'
 
-const adapter = new PrismaLibSql({ url: "file:./dev.db" })
+// Forzamos ruta absoluta igual que en la app
+let dbUrl = process.env.DATABASE_URL
+if (!dbUrl || dbUrl === "undefined") {
+  const dbPath = path.resolve(process.cwd(), 'dev.db')
+  dbUrl = `file:${dbPath}`
+}
+
+console.log(`[Seed] 🌱 Iniciando carga de datos en: ${dbUrl}`)
+const libsql = createClient({ url: dbUrl })
+const adapter = new PrismaLibSql(libsql as any)
 const prisma = new PrismaClient({ adapter })
 
 async function main() {

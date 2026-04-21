@@ -33,7 +33,9 @@ npx --yes prisma generate
 npx --yes prisma db push --accept-data-loss
 
 # 5. Seed de datos
-echo "🌱 Cargando datos iniciales..."
+echo "🌱 Cargando datos iniciales (admin/admin123)..."
+# Aseguramos que la base de datos sea escribible
+chmod 666 dev.db || true
 npx --yes ts-node --compiler-options '{"module":"CommonJS"}' prisma/seed.ts
 
 # 6. Build para Producción

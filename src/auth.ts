@@ -30,33 +30,43 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!credentials?.username || !credentials?.password) return null
 
         // Importación dinámica para evitar cargar prisma/bcrypt en el middleware (Edge Runtime)
-        const [{ default: prisma }, { default: bcrypt }] = await Promise.all([
-          import("@/lib/prisma"),
-          import("bcryptjs")
-        ])
+        const { default: prisma } = await import("@/lib/prisma")
+        const bcrypt = await import("bcryptjs").then(m => m.default || m)
 
-        console.log(`[Auth] Intento de login para usuario: ${credentials.username}`)
+        console.log(`[Auth] Intento de login: ${credentials.username}`)
 
-        const user = await prisma.user.findUnique({
-          where: { username: credentials.username as string },
-        })
+        try {
+          const user = await prisma.user.findUnique({
+            where: { username: credentials.username as string },
+          })
 
-        if (!user) {
-          console.log(`[Auth] Usuario no encontrado: ${credentials.username}`)
+          if (!user) {
+            console.log(`[Auth] ❌ Usuario no encontrado: ${credentials.username}`)
+            return null
+          }
+
+          // Verificamos que bcrypt tenga la función compare
+          if (typeof bcrypt.compare !== 'function') {
+            console.error("[Auth] ❌ Error: bcrypt.compare no es una función", bcrypt)
+            return null
+          }
+
+          const isValid = await bcrypt.compare(credentials.password as string, user.password)
+          console.log(`[Auth] Resultado para ${user.username}: ${isValid ? "✅ VÁLIDO" : "❌ INVÁLIDO"}`)
+
+          if (isValid) {
+            return {
+              id: user.id,
+              name: user.name,
+              username: user.username,
+              role: user.role,
+            }
+          }
+          return null
+        } catch (error) {
+          console.error(`[Auth] Error crítico en authorize:`, error)
           return null
         }
-
-        const isValid = await bcrypt.compare(credentials.password as string, user.password)
-
-        if (isValid) {
-          return {
-            id: user.id,
-            name: user.name,
-            username: user.username,
-            role: user.role,
-          }
-        }
-        return null
       },
     }),
   ],
