@@ -17,7 +17,11 @@ export async function GET() {
   try {
     // Prueba rápida de conexión
     await prisma.$queryRaw`SELECT 1`
-    diagnostics.database = "Conectada correctamente"
+    const users = await prisma.user.findMany({ select: { username: true, role: true } })
+    diagnostics.database = {
+      status: "Conectada correctamente",
+      users: users
+    } as any
   } catch (error: any) {
     diagnostics.database = `Error: ${error.message}`
   }

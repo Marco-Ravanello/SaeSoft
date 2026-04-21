@@ -35,11 +35,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           import("bcryptjs")
         ])
 
+        console.log(`[Auth] Intento de login para usuario: ${credentials.username}`)
+
         const user = await prisma.user.findUnique({
           where: { username: credentials.username as string },
         })
 
-        if (user && await (bcrypt.compare as any)(credentials.password as string, user.password)) {
+        if (!user) {
+          console.log(`[Auth] Usuario no encontrado: ${credentials.username}`)
+          return null
+        }
+
+        const isValid = await bcrypt.compare(credentials.password as string, user.password)
+
+        if (isValid) {
           return {
             id: user.id,
             name: user.name,
