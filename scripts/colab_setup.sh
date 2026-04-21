@@ -24,6 +24,7 @@ cat <<EOF > .env
 DATABASE_URL="file:$ABS_DB_PATH"
 AUTH_SECRET="$RANDOM_SECRET"
 AUTH_TRUST_HOST="true"
+NEXTAUTH_URL="http://localhost:3000"
 EOF
 
 # 4. Preparación de Base de Datos
