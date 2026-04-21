@@ -8,11 +8,13 @@ const prismaClientSingleton = () => {
 
   // Verificación extrema para evitar el error 'undefined' en entornos de túnel
   if (!url || String(url).includes("undefined") || String(url).trim() === "") {
-    // En Google Colab, la ruta estándar es esta. Usamos string directo para evitar 'path' en Edge
+    // En Google Colab, la ruta estándar es esta.
     url = "file:/content/SaeSoft3F/dev.db"
-    console.log(`[Prisma] URL no válida detectada. Usando fallback Colab: ${url}`)
+    console.log(`[Prisma] ⚠️ DATABASE_URL no válida. Usando fallback Colab: ${url}`)
   } else {
-    console.log(`[Prisma] Conectando a: ${url}`)
+    // Limpiamos la URL de posibles caracteres invisibles o saltos de línea
+    url = String(url).trim()
+    console.log(`[Prisma] ✅ Conectando a: ${url}`)
   }
 
   try {

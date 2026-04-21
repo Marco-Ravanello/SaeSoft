@@ -20,12 +20,21 @@ echo "📝 Configurando variables de entorno..."
 RANDOM_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
 # Usamos ruta absoluta para la base de datos para evitar errores 500
 ABS_DB_PATH=$(pwd)/dev.db
+# Limpiamos posibles espacios en blanco en la ruta
+ABS_DB_PATH=$(echo $ABS_DB_PATH | xargs)
+
 cat <<EOF > .env
 DATABASE_URL="file:$ABS_DB_PATH"
 AUTH_SECRET="$RANDOM_SECRET"
 AUTH_TRUST_HOST="true"
 NEXTAUTH_URL="http://localhost:3000"
 EOF
+
+# Verificar creación de .env
+if [ ! -f .env ]; then
+    echo "❌ ERROR: No se pudo crear el archivo .env"
+    exit 1
+fi
 
 # 4. Preparación de Base de Datos
 echo "🗄️ Configurando base de datos Prisma (v7+)..."

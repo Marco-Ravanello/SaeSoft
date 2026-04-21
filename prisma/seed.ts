@@ -3,10 +3,14 @@ import { PrismaLibSql } from '@prisma/adapter-libsql'
 import { createClient } from '@libsql/client'
 import bcrypt from 'bcryptjs'
 import path from 'path'
+import dotenv from 'dotenv'
 
-// Forzamos ruta absoluta igual que en la app
+// Cargar .env de forma explícita para scripts fuera de Next.js
+dotenv.config()
+
+// Forzamos ruta absoluta igual que en la app para evitar URL_INVALID
 let dbUrl = process.env.DATABASE_URL
-if (!dbUrl || dbUrl === "undefined") {
+if (!dbUrl || String(dbUrl).includes("undefined") || String(dbUrl).trim() === "") {
   const dbPath = path.resolve(process.cwd(), 'dev.db')
   dbUrl = `file:${dbPath}`
 }
