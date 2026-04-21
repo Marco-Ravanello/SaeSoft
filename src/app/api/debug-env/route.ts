@@ -7,8 +7,8 @@ export async function GET() {
     node_version: process.version,
     env: {
       NODE_ENV: process.env.NODE_ENV,
-      DATABASE_URL: process.env.DATABASE_URL ? "Configurada" : "No configurada",
-      AUTH_SECRET: process.env.AUTH_SECRET ? "Configurada" : "No configurada",
+      DATABASE_URL: process.env.DATABASE_URL,
+      AUTH_SECRET: process.env.AUTH_SECRET ? "Configurada (OK)" : "No configurada (FAIL)",
       AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
     },
     database: "Desconocido"

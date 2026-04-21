@@ -3,7 +3,13 @@ import { PrismaLibSql } from '@prisma/adapter-libsql'
 import { createClient } from '@libsql/client'
 
 const prismaClientSingleton = () => {
-  const url = process.env.DATABASE_URL || "file:./dev.db"
+  let url = process.env.DATABASE_URL
+
+  // Verificación robusta de la URL para evitar errores 'undefined' en strings
+  if (!url || url === "undefined" || url === "file:undefined") {
+    url = "file:./dev.db"
+  }
+
   console.log(`[Prisma] Inicializando con DB: ${url}`)
   const libsql = createClient({ url })
   const adapter = new PrismaLibSql(libsql as any)

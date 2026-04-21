@@ -1,10 +1,9 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import prisma from "@/lib/prisma"
-import bcrypt from "bcryptjs"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
+  debug: process.env.NODE_ENV !== 'production',
   cookies: {
     sessionToken: {
       name: `next-auth.session-token`,
@@ -12,7 +11,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: false,
+        secure: true, // Requerido para túneles HTTPS como Cloudflare
       },
     },
   },
@@ -30,11 +29,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) return null
 
+        // Importación dinámica para evitar cargar prisma/bcrypt en el middleware (Edge Runtime)
+        const [{ default: prisma }, { default: bcrypt }] = await Promise.all([
+          import("@/lib/prisma"),
+          import("bcryptjs")
+        ])
+
         const user = await prisma.user.findUnique({
           where: { username: credentials.username as string },
         })
 
-        if (user && await bcrypt.compare(credentials.password as string, user.password)) {
+        if (user && await (bcrypt.compare as any)(credentials.password as string, user.password)) {
           return {
             id: user.id,
             name: user.name,

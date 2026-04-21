@@ -2,16 +2,17 @@
 set -e
 echo "🚀 Iniciando configuración de SaeSoft 3F..."
 
-# 1. Instalación de Node.js 22 si no existe (Requerido por Prisma 7.7+)
+# 1. Instalación de Node.js 22 (Requerido por Prisma 7.7+)
+echo "📦 Verificando/Instalando Node.js 22..."
 if ! command -v node &> /dev/null || [[ $(node -v) != v22* ]]; then
-    echo "📦 Instalando Node.js 22..."
-    curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - &> /dev/null
-    sudo apt-get install -y nodejs &> /dev/null
+    curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+    sudo apt-get install -y nodejs
 fi
+node -v
 
 # 2. Instalación de dependencias
 echo "📥 Instalando dependencias de Node.js..."
-npm install
+npm install --no-audit --no-fund
 
 # 3. Configuración de .env
 echo "📝 Configurando variables de entorno..."
