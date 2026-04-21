@@ -23,8 +23,8 @@ function LoginContent() {
 
     try {
       const result: any = await signIn("credentials", {
-        username,
-        password,
+        username: username.trim(),
+        password: password.trim(),
         redirect: false,
       })
 

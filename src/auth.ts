@@ -33,11 +33,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const { default: prisma } = await import("@/lib/prisma")
         const bcrypt = await import("bcryptjs").then(m => m.default || m)
 
-        console.log(`[Auth] Intento de login: ${credentials.username}`)
+        const inputUsername = (credentials.username as string || "").trim()
+        console.log(`[Auth] Intento de login: "${inputUsername}"`)
 
         try {
           const user = await prisma.user.findUnique({
-            where: { username: credentials.username as string },
+            where: { username: inputUsername },
           })
 
           if (!user) {
