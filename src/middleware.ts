@@ -21,8 +21,9 @@ export default auth((req) => {
     let callbackUrl = nextUrl.pathname
     if (nextUrl.search) callbackUrl += nextUrl.search
 
+    // Usamos redirección relativa para evitar problemas con localhost:3000 en túneles
     const encodedCallbackUrl = encodeURIComponent(callbackUrl)
-    return NextResponse.redirect(new URL(`/login?callbackUrl=${encodedCallbackUrl}`, nextUrl))
+    return NextResponse.redirect(new URL(`/login?callbackUrl=${encodedCallbackUrl}`, req.url))
   }
 
   return NextResponse.next()

@@ -38,3 +38,4 @@ next-env.d.ts
 /prisma/migrations
 dev.db
 dev.db-journal
+next_server.log

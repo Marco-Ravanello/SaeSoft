@@ -12,7 +12,8 @@ node -v
 
 # 2. Instalación de dependencias
 echo "📥 Instalando dependencias de Node.js..."
-npm install --no-audit --no-fund
+# Resolvemos conflictos de Git/package-lock si existen
+npm install --no-audit --no-fund || npm install --no-audit --no-fund --force
 
 # 3. Configuración de .env
 echo "📝 Configurando variables de entorno..."
@@ -27,7 +28,6 @@ cat <<EOF > .env
 DATABASE_URL="file:$ABS_DB_PATH"
 AUTH_SECRET="$RANDOM_SECRET"
 AUTH_TRUST_HOST="true"
-NEXTAUTH_URL="http://localhost:3000"
 EOF
 
 # Verificar creación de .env
@@ -51,6 +51,9 @@ npx --yes ts-node --compiler-options '{"module":"CommonJS"}' prisma/seed.ts
 # 6. Build para Producción
 echo "🏗️ Limpiando compilaciones previas y compilando para producción..."
 rm -rf .next
-npm run build
-
-echo "✅ Configuración finalizada correctamente."
+if npm run build; then
+    echo "✅ Configuración finalizada correctamente. Ya puedes ejecutar el Paso 2."
+else
+    echo "❌ ERROR: La compilación falló. Revisa los logs arriba."
+    exit 1
+fi
