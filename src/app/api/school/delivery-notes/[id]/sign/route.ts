@@ -7,14 +7,22 @@ export async function PATCH(req: Request, { params }: { params: any }) {
   if ((session?.user as any)?.role !== "SCHOOL") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
   const { id } = await params
-  const { signature } = await req.json()
 
-  console.log(`[API] Firmando remito ${id}. Tamaño de firma: ${Math.round((signature?.length || 0) / 1024)} KB`)
+  const timestamp = new Date()
+  const user: any = session?.user
+  const stampId = `STAMP-${user?.id?.slice(-6) || 'UNK'}-${timestamp.getTime()}`
+  const digitalStamp = `Firmado Digitalmente por ${user?.name || 'Usuario'} (${user?.username || 'user'}) el ${timestamp.toLocaleString('es-AR')}. ID de Verificación: ${stampId}`
+
+  console.log(`[API] Generando firma digital para remito ${id}`)
 
   try {
     const updated = await prisma.deliveryNote.update({
       where: { id },
-      data: { status: "SIGNED", signature, signedAt: new Date() }
+      data: {
+        status: "SIGNED",
+        signature: digitalStamp,
+        signedAt: timestamp
+      }
     })
     console.log(`[API] Remito ${id} firmado exitosamente.`)
     return NextResponse.json({ ok: true })

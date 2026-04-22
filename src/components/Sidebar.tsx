@@ -8,7 +8,9 @@ import {
   Utensils,
   ClipboardList,
   Truck,
-  School
+  School,
+  UserCircle,
+  FileSpreadsheet
 } from "lucide-react"
 
 export default async function Sidebar() {
@@ -42,6 +44,7 @@ export default async function Sidebar() {
 
       <nav className="space-y-1 flex-1 overflow-y-auto custom-scrollbar">
         <NavLink href="/dashboard" icon={LayoutDashboard}>Inicio</NavLink>
+        <NavLink href="/dashboard/profile" icon={UserCircle}>Mi Perfil</NavLink>
 
         {role === "ADMIN" && (
           <>
@@ -54,6 +57,7 @@ export default async function Sidebar() {
           <>
             <SectionTitle>Gestión SAE</SectionTitle>
             <NavLink href="/dashboard/admin/assignments" icon={ArrowLeftRight}>Asignaciones</NavLink>
+            <NavLink href="/dashboard/admin/reports" icon={FileSpreadsheet}>Reportes</NavLink>
             <NavLink href="/dashboard/staff/menu" icon={Utensils}>Menú Semanal</NavLink>
             <NavLink href="/dashboard/staff/requests" icon={ClipboardList}>Solicitudes</NavLink>
           </>
