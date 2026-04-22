@@ -62,51 +62,39 @@ async function main() {
     },
   });
 
-  // 4. Schools of different types
-  const schoolsData = [
-    { username: 'jardin1', name: 'Jardín Municipal Nro 1', type: 'JARDIN_MUNICIPAL' },
-    { username: 'escuela1', name: 'Escuela Primaria Nro 34', type: 'PRIMARIA' },
-    { username: 'dispositivo1', name: 'Envión Nudo 1', type: 'DISPOSITIVO_TERRITORIAL' },
-  ];
+  // 4. School
+  const schoolUser = await prisma.user.upsert({
+    where: { username: 'escuela1' },
+    update: { password: schoolPassword },
+    create: {
+      username: 'escuela1',
+      password: schoolPassword,
+      name: 'Escuela Nro 1 "D.F. Sarmiento"',
+      role: 'SCHOOL',
+    },
+  });
 
-  for (const s of schoolsData) {
-    const user = await prisma.user.upsert({
-      where: { username: s.username },
-      update: { password: schoolPassword },
-      create: {
-        username: s.username,
-        password: schoolPassword,
-        name: s.name,
-        role: 'SCHOOL',
-      },
-    });
+  const school = await prisma.school.upsert({
+    where: { userId: schoolUser.id },
+    update: { providerId: provider.id },
+    create: {
+      name: 'Escuela Nro 1 "D.F. Sarmiento"',
+      userId: schoolUser.id,
+      providerId: provider.id,
+    },
+  });
 
-    const school = await prisma.school.upsert({
-      where: { userId: user.id },
-      update: { providerId: provider.id, type: s.type },
-      create: {
-        name: s.name,
-        userId: user.id,
-        providerId: provider.id,
-        type: s.type,
-      },
-    });
-
-    // Servicios base
-    await prisma.schoolService.upsert({
-      where: { schoolId_serviceType: { schoolId: school.id, serviceType: 'BREAKFAST_SNACK' } },
-      update: { quota: 250 },
-      create: { schoolId: school.id, serviceType: 'BREAKFAST_SNACK', quota: 250 }
-    });
-
-    if (s.type !== 'JARDIN_MUNICIPAL' && s.type !== 'DISPOSITIVO_TERRITORIAL') {
-      await prisma.schoolService.upsert({
-        where: { schoolId_serviceType: { schoolId: school.id, serviceType: 'MESA_BOX' } },
-        update: { quota: 100 },
-        create: { schoolId: school.id, serviceType: 'MESA_BOX', quota: 100 }
-      });
-    }
-  }
+  // Servicios
+  await prisma.schoolService.upsert({
+    where: { schoolId_serviceType: { schoolId: school.id, serviceType: 'BREAKFAST_SNACK' } },
+    update: { quota: 250 },
+    create: { schoolId: school.id, serviceType: 'BREAKFAST_SNACK', quota: 250 }
+  });
+  await prisma.schoolService.upsert({
+    where: { schoolId_serviceType: { schoolId: school.id, serviceType: 'LUNCH' } },
+    update: { quota: 180 },
+    create: { schoolId: school.id, serviceType: 'LUNCH', quota: 180 }
+  });
 
   console.log('✅ Seed completed successfully');
   await prisma.$disconnect();

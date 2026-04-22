@@ -26,6 +26,7 @@ enum DeliveryStatus {
 enum ServiceType {
   BREAKFAST_SNACK
   LUNCH
+  NUTRITIONAL_REINFORCEMENT
   MESA_BOX
 }
 enum SchoolType {
@@ -82,7 +83,8 @@ model Menu {
   name       String
   startDate  DateTime
   endDate    DateTime
-  schoolType SchoolType?
+  category   ServiceType @default(BREAKFAST_SNACK)
+  targetType SchoolType?
   provider   Provider    @relation(fields: [providerId], references: [id])
   providerId String
   dishes     Dish[]

@@ -1,22 +1,25 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Download, FileSpreadsheet, Loader2, Filter } from 'lucide-react'
+import { Download, FileSpreadsheet, Loader2, Filter, AlertCircle } from 'lucide-react'
 
 export default function ExportPage() {
   const [providers, setProviders] = useState<any[]>([])
   const [selectedProvider, setSelectedProvider] = useState('')
   const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7))
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     fetch('/api/admin/assignments')
       .then(res => res.json())
       .then(data => setProviders(data.providers || []))
+      .catch(() => {})
   }, [])
 
   const handleExport = async () => {
     setLoading(true)
+    setError('')
     const params = new URLSearchParams()
     if (selectedProvider) params.append('providerId', selectedProvider)
     if (selectedMonth) params.append('month', selectedMonth)
@@ -28,15 +31,16 @@ export default function ExportPage() {
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = `SAE_Export_${selectedMonth || 'Completo'}.xlsx`
+        a.download = `SAE_Export_${selectedMonth || 'Reporte'}.xlsx`
         document.body.appendChild(a)
         a.click()
         a.remove()
       } else {
-        alert("Error al generar el reporte")
+        const data = await res.json().catch(() => ({}))
+        setError(data.error || "Error al generar el reporte")
       }
     } catch (error) {
-      alert("Error de conexión")
+      setError("Error de conexión con el servidor")
     } finally {
       setLoading(false)
     }
@@ -46,7 +50,7 @@ export default function ExportPage() {
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
       <header className="flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Reportes de Facturación</h1>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight italic">Reportes de Facturación</h1>
           <p className="text-slate-500 mt-1">Genera archivos Excel con los remitos firmados para contaduría.</p>
         </div>
         <div className="bg-slate-100 p-3 rounded-2xl">
@@ -63,9 +67,16 @@ export default function ExportPage() {
         </div>
 
         <div className="p-8 space-y-6">
+          {error && (
+            <div className="bg-red-50 border border-red-100 p-4 rounded-2xl flex items-center gap-3 text-red-700 text-sm font-medium">
+              <AlertCircle size={20} />
+              {error}
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-600 ml-1">Proveedor</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Proveedor</label>
               <select
                 value={selectedProvider}
                 onChange={(e) => setSelectedProvider(e.target.value)}
@@ -79,7 +90,7 @@ export default function ExportPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-600 ml-1">Mes de Facturación</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Mes de Facturación</label>
               <input
                 type="month"
                 value={selectedMonth}
@@ -94,7 +105,7 @@ export default function ExportPage() {
               <Download size={18} />
               Instrucciones de Exportación
             </h3>
-            <ul className="text-sm text-blue-800 space-y-1 ml-6 list-disc">
+            <ul className="text-xs text-blue-800 space-y-1 ml-6 list-disc">
               <li>El reporte solo incluirá remitos con estado <strong>FIRMADO</strong>.</li>
               <li>El formato del Excel es compatible con el sistema de Contaduría Municipal.</li>
               <li>Los servicios se agruparán automáticamente por tipo de ración.</li>

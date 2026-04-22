@@ -10,7 +10,8 @@ import {
   Truck,
   School,
   UserCircle,
-  FileSpreadsheet
+  FileSpreadsheet,
+  AlertTriangle
 } from "lucide-react"
 
 export default async function Sidebar() {
@@ -69,6 +70,7 @@ export default async function Sidebar() {
             <SectionTitle>Proveedor</SectionTitle>
             <NavLink href="/dashboard/provider/menu" icon={Utensils}>Mi Menú</NavLink>
             <NavLink href="/dashboard/provider/deliveries" icon={Truck}>Entregas</NavLink>
+            <NavLink href="/dashboard/provider/claims" icon={AlertTriangle}>Reclamos</NavLink>
           </>
         )}
 
