@@ -1,31 +1,18 @@
-import { PrismaClient } from '@prisma/client'
 import { PrismaLibSql } from '@prisma/adapter-libsql'
-import { createClient } from '@libsql/client'
-import path from 'path'
+import { PrismaClient } from '@prisma/client'
+import { initEnv } from './env-init'
 
 const prismaClientSingleton = () => {
-  let url = process.env.DATABASE_URL
-
-  // Verificación extrema para evitar el error 'undefined' en entornos de túnel
-  if (!url || String(url).includes("undefined") || String(url).trim() === "") {
-    // En Google Colab, la ruta estándar es esta.
-    url = "file:/content/SaeSoft3F/dev.db"
-    console.log(`[Prisma] ⚠️ DATABASE_URL no válida. Usando fallback Colab: ${url}`)
-  } else {
-    // Limpiamos la URL de posibles caracteres invisibles o saltos de línea
-    url = String(url).trim()
-    console.log(`[Prisma] ✅ Conectando a: ${url}`)
-  }
+  initEnv();
+  const url = process.env.DATABASE_URL as string
+  console.log(`[Prisma] ✅ Conectando con adapter simplificado a: ${url}`)
 
   try {
-    const libsql = createClient({ url })
-    const adapter = new PrismaLibSql(libsql as any)
+    const adapter = new PrismaLibSql({ url })
     return new PrismaClient({ adapter })
   } catch (error) {
     console.error("[Prisma] Falló la inicialización:", error)
-    // Último recurso: ruta relativa simple
-    const fallback = createClient({ url: "file:dev.db" })
-    return new PrismaClient({ adapter: new PrismaLibSql(fallback as any) })
+    return new PrismaClient()
   }
 }
 

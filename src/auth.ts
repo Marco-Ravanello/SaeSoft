@@ -92,4 +92,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/login",
   },
+  logger: {
+    error(code, ...message) {
+      console.error(`[Auth-Error] [${code}]`, ...message)
+    },
+    warn(code, ...message) {
+      console.warn(`[Auth-Warn] [${code}]`, ...message)
+    },
+    debug(code, ...message) {
+      console.log(`[Auth-Debug] [${code}]`, ...message)
+    },
+  },
 })

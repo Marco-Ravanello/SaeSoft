@@ -30,30 +30,24 @@ AUTH_SECRET="$RANDOM_SECRET"
 AUTH_TRUST_HOST="true"
 EOF
 
-# Verificar creación de .env
-if [ ! -f .env ]; then
-    echo "❌ ERROR: No se pudo crear el archivo .env"
-    exit 1
-fi
-
 # 4. Preparación de Base de Datos
 echo "🗄️ Configurando base de datos Prisma (v7+)..."
-# Prisma 7 usa prisma.config.ts para la URL de migración
+export DATABASE_URL="file:$ABS_DB_PATH"
+
 npx --yes prisma generate
 npx --yes prisma db push --accept-data-loss
 
 # 5. Seed de datos
 echo "🌱 Cargando datos iniciales (admin/admin123)..."
-# Aseguramos que la base de datos sea escribible
 chmod 666 dev.db || true
-npx --yes ts-node --compiler-options '{"module":"CommonJS"}' prisma/seed.ts
+node prisma/seed.ts
 
 # 6. Build para Producción
-echo "🏗️ Limpiando compilaciones previas y compilando para producción..."
+echo "🏗️ Compilando para producción..."
 rm -rf .next
 if npm run build; then
-    echo "✅ Configuración finalizada correctamente. Ya puedes ejecutar el Paso 2."
+    echo "✅ Configuración finalizada correctamente."
 else
-    echo "❌ ERROR: La compilación falló. Revisa los logs arriba."
+    echo "❌ ERROR: La compilación falló."
     exit 1
 fi
