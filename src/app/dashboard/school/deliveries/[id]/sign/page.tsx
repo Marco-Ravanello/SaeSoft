@@ -1,113 +1,93 @@
 "use client"
-import { use, useState, useRef, useEffect } from "react"
+import { use, useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { CheckCircle2, ShieldCheck, AlertCircle, ArrowLeft, Loader2 } from "lucide-react"
 
 export default function SignDeliveryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const [SignatureCanvas, setSignatureCanvas] = useState<any>(null)
-  const sigCanvas = useRef<any>(null)
 
   useEffect(() => {
     setMounted(true)
-    import("react-signature-canvas").then((mod) => {
-      setSignatureCanvas(() => mod.default)
-    })
   }, [])
 
-  const clear = () => sigCanvas.current?.clear()
-
   const handleSign = async () => {
-    if (sigCanvas.current?.isEmpty()) {
-      alert("Por favor, realice la firma antes de continuar.")
-      return
-    }
-
     setLoading(true)
-    // Comprimimos a JPEG con calidad 0.2 para reducir drásticamente el peso del payload.
-    // Para firmas en blanco y negro, 0.2 es más que suficiente y ahorra mucho espacio.
-    const signatureData = sigCanvas.current?.getTrimmedCanvas().toDataURL("image/jpeg", 0.2)
-
-    console.log(`[Client] Enviando firma. Tamaño: ${Math.round(signatureData.length / 1024)} KB`)
 
     try {
-      // Timeout de 45 segundos para la petición considerando conexiones lentas o túneles
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 45000);
-
       const response = await fetch(`/api/school/delivery-notes/${id}/sign`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ signature: signatureData }),
-        signal: controller.signal
+        body: JSON.stringify({}),
       });
 
-      clearTimeout(timeoutId);
-
       if (response.ok) {
-        console.log("[Client] Firma guardada con éxito. Redirigiendo...")
         setSuccess(true)
-        setLoading(false)
-        // Redirección forzada eliminando historial para asegurar que no se quede trabado
         setTimeout(() => {
           window.location.replace("/dashboard/school/deliveries");
         }, 1500)
       } else {
-        const errorData = await response.json().catch(() => ({}));
-        alert(`Error al guardar: ${errorData.error || "Servidor no responde"}`);
+        alert("Error al firmar el remito.");
         setLoading(false);
       }
-    } catch (error: any) {
-      if (error.name === "AbortError") {
-        alert("La conexión tardó demasiado. Por favor, intente de nuevo.");
-      } else {
-        alert("Error de conexión o datos demasiado pesados.");
-      }
+    } catch (error) {
+      alert("Error de conexión.");
       setLoading(false);
     }
   }
 
-  if (!mounted || !SignatureCanvas) return <div className="p-12 text-center text-slate-400">Iniciando pad de firma...</div>
+  if (!mounted) return null
 
   return (
-    <div className="max-w-2xl mx-auto bg-white space-y-6 rounded-3xl shadow-2xl mt-12 border border-slate-100 p-8 animate-in fade-in zoom-in duration-300">
-      <h1 className="text-3xl font-extrabold text-slate-900 mb-2 text-center">Firma Digital</h1>
-      <p className="text-slate-500 text-center mb-8">Por favor, dibuje su firma y sello en el recuadro de abajo.</p>
-
-      <div className="border-2 border-slate-200 rounded-2xl overflow-hidden bg-slate-50 mb-8 h-64 flex items-center justify-center">
-        {/* Forzamos un ancho/alto interno fijo para que la imagen resultante no sea gigante en pantallas Retina/4K */}
-        <SignatureCanvas
-          ref={sigCanvas}
-          penColor="black"
-          canvasProps={{
-            width: 600,
-            height: 250,
-            className: "signature-canvas cursor-crosshair bg-white"
-          }}
-        />
-      </div>
-
-      <div className="flex gap-4">
+    <div className="max-w-xl mx-auto py-20 px-6 animate-in fade-in zoom-in duration-500">
         <button
-          onClick={clear}
-          disabled={loading}
-          className="flex-1 bg-slate-100 text-slate-600 p-4 rounded-xl font-bold hover:bg-slate-200 transition-all"
+            onClick={() => window.history.back()}
+            className="flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold mb-8 transition-colors"
         >
-          Limpiar
+            <ArrowLeft size={20} /> CANCELAR
         </button>
-        <button
-          onClick={handleSign}
-          disabled={loading || success}
-          className={`flex-[2] p-4 rounded-xl font-bold transition-all shadow-lg ${
-            success
-              ? "bg-green-600 text-white shadow-green-200"
-              : "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-200 disabled:bg-blue-300"
-          }`}
-        >
-          {loading ? "Guardando..." : success ? "✓ ¡Firmado!" : "Firmar y Confirmar"}
-        </button>
+
+      <div className="bg-white rounded-[3rem] shadow-2xl border border-slate-100 p-10 text-center space-y-8 relative overflow-hidden">
+        <div className="flex justify-center">
+          <div className="w-24 h-24 bg-slate-900 rounded-[2rem] flex items-center justify-center text-blue-500 shadow-xl shadow-slate-200">
+            <ShieldCheck size={48} />
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h1 className="text-3xl font-black italic text-slate-900 uppercase tracking-tight">Validación Digital</h1>
+          <p className="text-slate-500 font-medium leading-relaxed px-4">
+            Al confirmar, se generará un <strong>Sello de Identidad Digital</strong> único que vincula tu usuario con esta recepción.
+          </p>
+        </div>
+
+        <div className="bg-amber-50 border-2 border-amber-100 rounded-[2rem] p-6 flex gap-4 text-left">
+          <AlertCircle className="text-amber-600 shrink-0 mt-1" size={24} />
+          <p className="text-xs text-amber-900 font-bold leading-relaxed uppercase tracking-tight">
+            Esta acción tiene validez legal institucional y equivale a una firma y sello en papel. Quedará registrada en la auditoría municipal.
+          </p>
+        </div>
+
+        <div className="pt-4">
+          <button
+            onClick={handleSign}
+            disabled={loading || success}
+            className={`w-full p-6 rounded-[2rem] font-black text-xl transition-all shadow-2xl flex items-center justify-center gap-3 ${
+              success
+                ? "bg-green-600 text-white shadow-green-200"
+                : "bg-slate-900 text-white hover:bg-slate-800 hover:-translate-y-1 shadow-slate-300 disabled:bg-slate-300 disabled:shadow-none"
+            }`}
+          >
+            {loading ? <Loader2 className="animate-spin" size={24} /> : success ? (
+              <>
+                <CheckCircle2 size={24} />
+                ¡REMITO FIRMADO!
+              </>
+            ) : "FIRMAR DIGITALMENTE"}
+          </button>
+        </div>
       </div>
     </div>
   )
